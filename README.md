@@ -25,13 +25,19 @@ mechanism behind Act 4's `overreach` scenario.
 ## CI
 
 `.github/workflows/ci.yml` runs one job named `ci`: pytest, `terraform validate` (both root
-modules), and `tflint` (both root modules, with `.tflint.hcl` disabling exactly the rules that
-would fire on the seeded defects above — see that file for which ones and why). CI is green on
-this vulnerable baseline; that's the point.
+modules), and `tflint` (both root modules). `.tflint.hcl` enables the `aws` plugin with no
+rule overrides — checked directly against the installed ruleset (v0.36.0): it has no
+security-posture rules at all (no public-ACL/open-ingress/wildcard-IAM checks), so there was
+nothing to disable for the seeded defects above. See that file's comment for the full finding.
+CI is green on this vulnerable baseline; that's the point.
 
-Branch protection on `main` requires both `ci` and `poc/change-signature` (posted by the `poc`
-tool itself, not a GitHub Actions job) before anything can merge — including via admin
-override.
+Branch protection on `main` requires both `ci` (a GitHub Actions check-run) and
+`poc/change-signature` before anything can merge, including via admin override.
+`poc/change-signature` is posted via the classic commit-status API
+(`POST /repos/.../statuses/{sha}`), not the Checks API the build spec's snippet shows — a
+personal access token gets a hard 403 on the Checks API ("must authenticate via a GitHub
+App"); the commit-status API works with a PAT and `required_status_checks` recognizes it
+identically.
 
 ## Resetting to baseline
 
@@ -41,3 +47,10 @@ scripts/reset_target.sh
 
 Closes open PRs, deletes stale branches, and hard-resets `main` to the `baseline` tag. Run
 this before every demo.
+
+Branch protection normally sets `allow_force_pushes: false` (§6 "no force push"), which is
+exactly what would block this reset's force-push — so the script briefly flips that one
+setting via the GitHub API, force-pushes, then restores the full protected configuration
+(`scripts/branch_protection.json`) via a `trap ... EXIT`, even if an earlier step failed.
+Nothing else about branch protection (required checks, `enforce_admins`, `allow_deletions`) is
+ever touched.
