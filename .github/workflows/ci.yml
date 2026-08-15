@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  ci:
+    name: ci
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Python dependencies
+        run: pip install -r services/api/requirements-dev.txt
+
+      - name: Run pytest
+        run: pytest services/api/tests -v
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false
+
+      - name: terraform validate (infra/terraform)
+        working-directory: infra/terraform
+        run: |
+          terraform init -backend=false -input=false
+          terraform validate
+
+      - name: terraform validate (infra/iam)
+        working-directory: infra/iam
+        run: |
+          terraform init -backend=false -input=false
+          terraform validate
+
+      - uses: terraform-linters/setup-tflint@v4
+        with:
+          tflint_version: latest
+
+      - name: tflint (infra/terraform)
+        working-directory: infra/terraform
+        run: |
+          tflint --init --config="${{ github.workspace }}/.tflint.hcl"
+          tflint --config="${{ github.workspace }}/.tflint.hcl"
+
+      - name: tflint (infra/iam)
+        working-directory: infra/iam
+        run: |
+          tflint --init --config="${{ github.workspace }}/.tflint.hcl"
+          tflint --config="${{ github.workspace }}/.tflint.hcl"
