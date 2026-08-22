@@ -1,7 +1,6 @@
 {
   "name": "orca-poc-target",
   "version": "1.0.0",
-  "private": true,
   "description": "Demo target service for the Orca closed-loop remediation POC.",
   "main": "src/server.js",
   "scripts": {
@@ -11,10 +10,11 @@
   },
   "dependencies": {
     "express": "4.19.2",
-    "lodash": "4.17.15"
+    "lodash": "4.17.21"
   },
   "devDependencies": {
     "jest": "29.7.0",
     "supertest": "6.3.4"
-  }
+  },
+  "private": true
 }
