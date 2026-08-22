@@ -10,7 +10,7 @@
   },
   "private": true,
   "dependencies": {
-    "express": "4.19.2",
+    "express": "4.20.0",
     "lodash": "4.17.21"
   },
   "devDependencies": {
