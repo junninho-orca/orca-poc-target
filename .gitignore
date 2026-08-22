@@ -3,3 +3,9 @@ coverage/
 .env
 *.log
 .terraform/
+
+# Python service dependencies, installed here with `pip install --target` so they
+# survive from the install container into the offline test container.
+.python-packages/
+__pycache__/
+.pytest_cache/

@@ -1,0 +1,8 @@
+# Runtime dependency of the notification renderer.
+Jinja2==3.1.2
+
+# The test runner lives here rather than in a separate dev file on purpose: the sandbox
+# installs with `pip install -r requirements.txt` and then runs the suite in a second,
+# offline container, so anything the tests need has to come from this file — the same
+# reason jest sits in package.json's devDependencies for the Node service.
+pytest==8.3.2
