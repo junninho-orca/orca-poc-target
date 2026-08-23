@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 # Runtime dependency of the delivery endpoint.
-gem "rack", "3.0.8"
+gem "rack", "3.0.9.1"
 
 # The test runner lives here rather than in a separate group on purpose: the sandbox installs
 # from this file and then runs the suite in a second, offline container, so anything the tests
