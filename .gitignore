@@ -9,3 +9,8 @@ coverage/
 .python-packages/
 __pycache__/
 .pytest_cache/
+
+# Go module vendoring and Ruby gem path — both written into the repo so dependencies
+# survive from the install container into the offline test container. Build output, not source.
+vendor/
+.bundle/
