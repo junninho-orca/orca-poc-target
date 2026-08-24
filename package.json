@@ -3,15 +3,15 @@
   "version": "1.0.0",
   "description": "Demo target service for the Orca closed-loop remediation POC.",
   "main": "src/server.js",
+  "private": true,
   "scripts": {
     "start": "node src/server.js",
     "test": "jest",
     "lint": "echo 'lint placeholder — no linter configured in the POC target repo'"
   },
-  "private": true,
   "dependencies": {
     "express": "4.20.0",
-    "lodash": "4.17.15"
+    "lodash": "4.17.21"
   },
   "devDependencies": {
     "jest": "29.7.0",
